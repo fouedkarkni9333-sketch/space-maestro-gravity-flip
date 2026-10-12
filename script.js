@@ -2,6 +2,7 @@ const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 const videoElement = document.getElementById('video-element');
 
+// Adaptive dimensions for all devices
 let canvasWidth = 400;
 let canvasHeight = 650;
 canvas.width = canvasWidth;
@@ -14,7 +15,7 @@ let gameStarted = true;
 let player = {
     x: canvasWidth / 2,
     y: canvasHeight - 100,
-    radius: 22,
+    radius: 20,
     targetX: canvasWidth / 2
 };
 
@@ -40,17 +41,17 @@ function startRecording() {
         mediaRecorder.start();
         isRecording = true;
     } catch (e) {
-        console.log("التسجيل غير مدعوم على هذا المتصفح:", e);
+        console.log("Recording not supported on this device/browser:", e);
     }
 }
 
 function toggleRecording() {
     if (!isRecording) {
         startRecording();
-        alert("بدء تسجيل الفيديو...");
+        alert("Recording started...");
     } else {
         stopRecording();
-        alert("تم إيقاف التسجيل وجاهز للتحميل!");
+        alert("Recording stopped! Ready to download.");
     }
 }
 
@@ -70,6 +71,7 @@ function downloadRecording() {
     a.click();
 }
 
+// MediaPipe FaceMesh Tracking
 function onResults(results) {
     if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
         const landmarks = results.multiFaceLandmarks[0];
@@ -103,19 +105,20 @@ camera.start();
 function update() {
     if (!gameStarted || isGameOver) return;
 
-    player.x += (player.targetX - player.x) * 0.15;
+    // Smooth movement interpolation
+    player.x += (player.targetX - player.x) * 0.18;
     
     if (player.x < player.radius) player.x = player.radius;
     if (player.x > canvasWidth - player.radius) player.x = canvasWidth - player.radius;
 
     obstacleTimer++;
-    if (obstacleTimer > 55) {
+    if (obstacleTimer > 50) {
         obstacles.push({
-            x: Math.random() * (canvasWidth - 60) + 30,
+            x: Math.random() * (canvasWidth - 50) + 25,
             y: -50,
-            width: 45,
-            height: 45,
-            speed: 4 + Math.floor(score / 10)
+            width: 40,
+            height: 40,
+            speed: 4.5 + Math.floor(score / 8)
         });
         obstacleTimer = 0;
     }
@@ -140,30 +143,34 @@ function update() {
 }
 
 function draw() {
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+    ctx.clearRect(0, 0, canvasWidth, canvasWidth);
 
-    ctx.fillStyle = '#111827';
+    // Background space grid effect
+    ctx.fillStyle = '#0b0f19';
     ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
+    // Draw Obstacles (Neon Red)
     for (let obs of obstacles) {
         ctx.fillStyle = '#ff3366';
         ctx.shadowColor = '#ff3366';
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 12;
         ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
         ctx.shadowBlur = 0;
     }
 
+    // Draw Player (Neon Cyan spaceship/avatar with eyes)
     ctx.fillStyle = '#00f2fe';
     ctx.shadowColor = '#00f2fe';
-    ctx.shadowBlur = 15;
+    ctx.shadowBlur = 18;
     ctx.beginPath();
     ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
     ctx.fill();
     ctx.shadowBlur = 0;
 
+    // Player expressive eyes
     ctx.fillStyle = '#0b0f19';
-    ctx.fillRect(player.x - 8, player.y - 6, 5, 6);
-    ctx.fillRect(player.x + 3, player.y - 6, 5, 6);
+    ctx.fillRect(player.x - 7, player.y - 5, 4, 5);
+    ctx.fillRect(player.x + 3, player.y - 5, 4, 5);
 }
 
 function mainLoop() {
