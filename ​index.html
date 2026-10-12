@@ -4,33 +4,38 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space Maestro: Gravity Flip</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- استدعاء مكتبة MediaPipe لتتبع الوجه من خلال المتصفح مباشرة -->
+    <!-- ربط مكتبات MediaPipe للتعرف على الوجه -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+    <!-- ربط ملف التصميم الخارجي -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="game-container">
-        <!-- شاشة البداية أو واجهة اللعبة -->
-        <header>
-            <h1>Space Maestro</h1>
-            <p>مدير السيرك الفضائي الطائر</p>
-        </header>
+    <h2 style="margin-bottom: 10px; font-size: 22px; color: #00f2fe; text-align: center;">Space Maestro: Gravity Flip</h2>
 
-        <div class="view-port">
-            <!-- عنصر لعرض كاميرا الهاتف -->
-            <video id="webcam" autoplay playsinline muted></video>
-            <!-- لوحة الرسم الخاصة باللعبة فوق الكاميرا -->
-            <canvas id="gameCanvas"></canvas>
+    <div id="game-container">
+        <!-- شاشة النقاط والواجهة -->
+        <div class="ui-overlay">
+            <div class="score-box">النقاط: <span id="score-val">0</span></div>
+            <button class="btn" style="padding: 6px 14px; font-size: 12px; margin:0;" onclick="toggleRecording()">تسجيل فيديو</button>
         </div>
 
-        <div class="ui-layer">
-            <div id="score">النقاط: 0</div>
-            <button id="startBtn">ابدأ اللعبة</button>
+        <!-- شاشة النهاية Game Over -->
+        <div id="game-over-screen">
+            <h2>انتهت اللعبة!</h2>
+            <p>النتيجة النهائية: <span id="final-score">0</span></p>
+            <button class="btn" onclick="restartGame()">إعادة المحاولة</button>
+            <br>
+            <button class="btn" style="background: #28a745; color: #fff; margin-top: 10px;" onclick="downloadRecording()">تحميل الفيديو المسجل</button>
         </div>
+
+        <!-- عنصر الكاميرا والرسوميات -->
+        <video id="video-element" playsinline></video>
+        <canvas id="gameCanvas"></canvas>
     </div>
 
+    <!-- ربط ملف الجافاسكريبت الخارجي -->
     <script src="script.js"></script>
 </body>
 </html>
