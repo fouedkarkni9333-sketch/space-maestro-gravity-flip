@@ -1,39 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space Maestro: Gravity Flip</title>
-    <!-- MediaPipe FaceMesh & Camera Utils -->
+    <link rel="stylesheet" href="style.css">
+    <!-- استدعاء مكتبة MediaPipe لتتبع الوجه من خلال المتصفح مباشرة -->
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <header class="game-header">
-        <h1>Space Maestro: Gravity Flip</h1>
-    </header>
+    <div class="game-container">
+        <!-- شاشة البداية أو واجهة اللعبة -->
+        <header>
+            <h1>Space Maestro</h1>
+            <p>مدير السيرك الفضائي الطائر</p>
+        </header>
 
-    <div id="game-container">
-        <!-- UI Overlay -->
-        <div class="ui-overlay">
-            <div class="score-box">Score: <span id="score-val">0</span></div>
-            <button class="btn-action" onclick="toggleRecording()">Record Clip</button>
+        <div class="view-port">
+            <!-- عنصر لعرض كاميرا الهاتف -->
+            <video id="webcam" autoplay playsinline muted></video>
+            <!-- لوحة الرسم الخاصة باللعبة فوق الكاميرا -->
+            <canvas id="gameCanvas"></canvas>
+            
+            <!-- شاشة Game Over وتسهيل تسجيل الفيديو -->
+            <div id="game-over-screen" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background:rgba(11,11,26,0.95); padding:20px; border-radius:10px; text-align:center; border:2px solid #00ffcc; z-index:20;">
+                <h2 style="color:#00ffcc; margin-top:0;">انتهت اللعبة!</h2>
+                <p id="final-score-text" style="color:#fff; font-size:1.1rem;"></p>
+                <button id="restartBtn" style="background-color:#00ffcc; color:#000; border:none; padding:8px 16px; font-weight:bold; border-radius:5px; cursor:pointer; margin-top:5px;">إعادة المحاولة</button>
+                <br>
+                <button id="downloadBtn" style="background-color:#ff3366; color:#fff; border:none; padding:8px 16px; font-weight:bold; border-radius:5px; cursor:pointer; margin-top:10px;">تحميل فيديو اللعبة</button>
+            </div>
         </div>
 
-        <!-- Game Over Screen -->
-        <div id="game-over-screen">
-            <h2>Game Over</h2>
-            <p>Final Score: <span id="final-score">0</span></p>
-            <button class="btn-main" onclick="restartGame()">Play Again</button>
-            <br>
-            <button class="btn-main btn-secondary" onclick="downloadRecording()">Download Video</button>
+        <div class="ui-layer">
+            <div id="score">النقاط: 0</div>
+            <button id="recordBtn" style="background-color:#ff3366; color:#fff; border:none; padding:8px 14px; font-weight:bold; border-radius:5px; cursor:pointer; display:none;">تسجيل فيديو</button>
+            <button id="startBtn">ابدأ اللعبة</button>
         </div>
-
-        <!-- Hidden Video for Camera Feed & Responsive Canvas -->
-        <video id="video-element" playsinline></video>
-        <canvas id="gameCanvas"></canvas>
     </div>
 
     <script src="script.js"></script>
