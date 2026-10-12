@@ -1,96 +1,131 @@
-
 body {
-margin: 0;
-padding: 0;
-background-color: #0b0b1a;
-color: #fff;
-font-family: Tahoma, sans-serif;
-display: flex;
-justify-content: center;
-align-items: center;
-height: 100vh;
-overflow: hidden;
+    margin: 0;
+    padding: 0;
+    background-color: #050510;
+    color: #fff;
+    font-family: Tahoma, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    touch-action: none;
 }
 
 .game-container {
-width: 100%;
-max-width: 400px;
-height: 100vh;
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-align-items: center;
-position: relative;
-background: #111;
+    width: 100%;
+    max-width: 450px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    background: #0b0b1a;
+    box-shadow: 0 0 20px rgba(0, 255, 204, 0.2);
 }
 
 header {
-text-align: center;
-padding: 10px;
-z-index: 10;
+    text-align: center;
+    padding: 8px;
+    z-index: 10;
+    background: rgba(11, 11, 26, 0.9);
+    width: 100%;
 }
 
 header h1 {
-margin: 0;
-font-size: 1.5rem;
-color: #00ffcc;
+    margin: 0;
+    font-size: 1.4rem;
+    color: #00ffcc;
+    text-shadow: 0 0 10px rgba(0, 255, 204, 0.5);
 }
 
 header p {
-margin: 5px 0 0;
-font-size: 0.85rem;
-color: #aaa;
+    margin: 3px 0 0;
+    font-size: 0.8rem;
+    color: #aaa;
 }
 
 .view-port {
-position: relative;
-width: 100%;
-flex-grow: 1;
-background: #000;
-overflow: hidden;
+    position: relative;
+    width: 100%;
+    flex-grow: 1;
+    background: #000;
+    overflow: hidden;
 }
 
 #webcam {
-position: absolute;
-width: 100%;
-height: 100%;
-object-fit: cover;
-transform: scaleX(-1); /* عكس الكاميرا لتكون مرآة طبيعية /
-opacity: 0.4; / جعل الكاميرا خافتة قليلاً لكي تظهر رسوميات اللعبة بوضوح فوقها */
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* عكس الكاميرا لتكون مرآة طبيعية */
+    opacity: 0.35; 
 }
 
 #gameCanvas {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-z-index: 5;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
 }
 
 .ui-layer {
-width: 100%;
-padding: 20px;
-display: flex;
-justify-content: space-between;
-align-items: center;
-box-sizing: border-box;
-z-index: 10;
-background: rgba(0, 0, 0, 0.7);
+    width: 100%;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 10;
+    background: rgba(5, 5, 16, 0.85);
+    border-top: 1px solid rgba(0, 255, 204, 0.2);
 }
 
 #score {
-font-size: 1.2rem;
-font-weight: bold;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #00ffcc;
+}
+
+#menu-overlay {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.difficulty-select {
+    display: flex;
+    gap: 5px;
+}
+
+.diff-btn {
+    background: transparent;
+    border: 1px solid #00ffcc;
+    color: #00ffcc;
+    padding: 6px 10px;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.diff-btn.active {
+    background: #00ffcc;
+    color: #000;
+    font-weight: bold;
 }
 
 #startBtn {
-background-color: #00ffcc;
-color: #000;
-border: none;
-padding: 10px 20px;
-font-size: 1rem;
-font-weight: bold;
-border-radius: 5px;
-cursor: pointer;
+    background: linear-gradient(45deg, #00ffcc, #0099ff);
+    color: #000;
+    border: none;
+    padding: 8px 18px;
+    font-size: 0.95rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 255, 204, 0.4);
 }
