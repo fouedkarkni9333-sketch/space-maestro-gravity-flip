@@ -1,46 +1,36 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Space Maestro: Gravity Flip</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- استدعاء مكتبة MediaPipe لتتبع الوجه من خلال المتصفح مباشرة -->
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Space Maestro: Gravity Flip</title>
+<link rel="stylesheet" href="style.css">
+<!-- استدعاء مكتبة MediaPipe لتتبع الوجه من خلال المتصفح مباشرة -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
-    <div class="game-container">
-        <!-- شاشة البداية أو واجهة اللعبة -->
-        <header>
-            <h1>Space Maestro</h1>
-            <p>مدير السيرك الفضائي الطائر</p>
-        </header>
+<div class="game-container">
+<!-- شاشة البداية أو واجهة اللعبة -->
+<header>
+<h1>Space Maestro</h1>
+<p>مدير السيرك الفضائي الطائر</p>
+</header>
 
-        <div class="view-port">
-            <!-- عنصر لعرض كاميرا الهاتف -->
-            <video id="webcam" autoplay playsinline muted></video>
-            <!-- لوحة الرسم الخاصة باللعبة فوق الكاميرا -->
-            <canvas id="gameCanvas"></canvas>
-            
-            <!-- شاشة Game Over وتسهيل تسجيل الفيديو -->
-            <div id="game-over-screen" style="display:none; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); background:rgba(11,11,26,0.95); padding:20px; border-radius:10px; text-align:center; border:2px solid #00ffcc; z-index:20;">
-                <h2 style="color:#00ffcc; margin-top:0;">انتهت اللعبة!</h2>
-                <p id="final-score-text" style="color:#fff; font-size:1.1rem;"></p>
-                <button id="restartBtn" style="background-color:#00ffcc; color:#000; border:none; padding:8px 16px; font-weight:bold; border-radius:5px; cursor:pointer; margin-top:5px;">إعادة المحاولة</button>
-                <br>
-                <button id="downloadBtn" style="background-color:#ff3366; color:#fff; border:none; padding:8px 16px; font-weight:bold; border-radius:5px; cursor:pointer; margin-top:10px;">تحميل فيديو اللعبة</button>
-            </div>
-        </div>
+<div class="view-port">
+<!-- عنصر لعرض كاميرا الهاتف -->
+<video id="webcam" autoplay playsinline muted></video>
+<!-- لوحة الرسم الخاصة باللعبة فوق الكاميرا -->
+<canvas id="gameCanvas"></canvas>
+</div>
 
-        <div class="ui-layer">
-            <div id="score">النقاط: 0</div>
-            <button id="recordBtn" style="background-color:#ff3366; color:#fff; border:none; padding:8px 14px; font-weight:bold; border-radius:5px; cursor:pointer; display:none;">تسجيل فيديو</button>
-            <button id="startBtn">ابدأ اللعبة</button>
-        </div>
-    </div>
+<div class="ui-layer">
+<div id="score">النقاط: 0</div>
+<button id="startBtn">ابدأ اللعبة</button>
+</div>
+</div>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
