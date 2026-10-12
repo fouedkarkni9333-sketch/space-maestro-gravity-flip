@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #0b0b1a;
+    color: #fff;
+    font-family: Tahoma, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 400px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    background: #111;
+}
+
+header {
+    text-align: center;
+    padding: 10px;
+    z-index: 10;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: #00ffcc;
+}
+
+header p {
+    margin: 5px 0 0;
+    font-size: 0.85rem;
+    color: #aaa;
+}
+
+.view-port {
+    position: relative;
+    width: 100%;
+    flex-grow: 1;
+    background: #000;
+    overflow: hidden;
+}
+
+#webcam {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* عكس الكاميرا لتكون مرآة طبيعية */
+    opacity: 0.4; /* جعل الكاميرا خافتة قليلاً لكي تظهر رسوميات اللعبة بوضوح فوقها */
+}
+
+#gameCanvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+}
+
+.ui-layer {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.7);
+}
+
+#score {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+#startBtn {
+    background-color: #00ffcc;
+    color: #000;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+}
