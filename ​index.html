@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Space Maestro: Gravity Flip</title>
 <link rel="stylesheet" href="style.css">
 <!-- استدعاء مكتبة MediaPipe لتتبع الوجه من خلال المتصفح مباشرة -->
@@ -12,23 +12,31 @@
 <body>
 
 <div class="game-container">
-<!-- شاشة البداية أو واجهة اللعبة -->
-<header>
-<h1>Space Maestro</h1>
-<p>مدير السيرك الفضائي الطائر</p>
-</header>
+    <header>
+        <h1>Space Maestro</h1>
+        <p>مدير السيرك الفضائي الطائر</p>
+    </header>
 
-<div class="view-port">
-<!-- عنصر لعرض كاميرا الهاتف -->
-<video id="webcam" autoplay playsinline muted></video>
-<!-- لوحة الرسم الخاصة باللعبة فوق الكاميرا -->
-<canvas id="gameCanvas"></canvas>
-</div>
+    <div class="view-port">
+        <!-- عنصر لعرض كاميرا الهاتف -->
+        <video id="webcam" autoplay playsinline muted></video>
+        <!-- لوحة الرسم الخاصة باللعبة فوق الكاميرا -->
+        <canvas id="gameCanvas"></canvas>
+    </div>
 
-<div class="ui-layer">
-<div id="score">النقاط: 0</div>
-<button id="startBtn">ابدأ اللعبة</button>
-</div>
+    <div class="ui-layer">
+        <div id="score">النقاط: 0</div>
+        
+        <!-- قائمة اختيار مستوى الصعوبة -->
+        <div id="menu-overlay">
+            <div class="difficulty-select">
+                <button class="diff-btn" data-speed="3" data-spawn="0.02">سهل</button>
+                <button class="diff-btn active" data-speed="5" data-spawn="0.035">متوسط</button>
+                <button class="diff-btn" data-speed="8" data-spawn="0.05">صعب</button>
+            </div>
+            <button id="startBtn">ابدأ اللعبة</button>
+        </div>
+    </div>
 </div>
 
 <script src="script.js"></script>
