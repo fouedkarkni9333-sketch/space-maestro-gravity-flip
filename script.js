@@ -1,57 +1,58 @@
-const canvas = document.getElementById('gameCanvas');
-const ctx = canvas.getContext('2d');
-const videoElement = document.getElementById('video-element');
+const videoElement = document.getElementById('webcam');
+const canvasElement = document.getElementById('gameCanvas');
+const canvasCtx = canvasElement.getContext('2d');
+const scoreElement = document.getElementById('score');
+const startBtn = document.getElementById('startBtn');
+const gameOverScreen = document.getElementById('game-over-screen');
+const finalScoreText = document.getElementById('final-score-text');
+const restartBtn = document.getElementById('restartBtn');
+const recordBtn = document.getElementById('recordBtn');
+const downloadBtn = document.getElementById('downloadBtn');
 
-// Adaptive dimensions for all devices
-let canvasWidth = 400;
-let canvasHeight = 650;
-canvas.width = canvasWidth;
-canvas.height = canvasHeight;
-
+let gameStarted = false;
 let score = 0;
-let isGameOver = false;
-let gameStarted = true;
 
+// إحداثيات شخصية اللاعب (مدير السيرك الفضائي)
 let player = {
-    x: canvasWidth / 2,
-    y: canvasHeight - 100,
-    radius: 20,
-    targetX: canvasWidth / 2
+    x: 200,
+    y: 400,
+    size: 30,
+    color: '#00ffcc'
 };
 
+// مصفوفة الكويكبات الفضائية
 let obstacles = [];
-let obstacleTimer = 0;
 
+// متغيرات تسجيل الفيديو
 let mediaRecorder;
 let recordedChunks = [];
 let isRecording = false;
 
-function startRecording() {
-    try {
-        const stream = canvas.captureStream(30);
-        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
-        recordedChunks = [];
-        
-        mediaRecorder.ondataavailable = function(event) {
-            if (event.data.size > 0) {
-                recordedChunks.push(event.data);
-            }
-        };
-        
-        mediaRecorder.start();
-        isRecording = true;
-    } catch (e) {
-        console.log("Recording not supported on this device/browser:", e);
+// ضبط أبعاد لوحة الرسم لتناسب الشاشة بدقة على أي جهاز
+function resizeCanvas() {
+    canvasElement.width = canvasElement.clientWidth;
+    canvasElement.height = canvasElement.clientHeight;
+    if (!gameStarted) {
+        player.x = canvasElement.width / 2;
+        player.y = canvasElement.height - 100;
     }
 }
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
 
-function toggleRecording() {
-    if (!isRecording) {
-        startRecording();
-        alert("Recording started...");
-    } else {
-        stopRecording();
-        alert("Recording stopped! Ready to download.");
+function startRecording() {
+    try {
+        const stream = canvasElement.captureStream(30);
+        mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm' });
+        recordedChunks = [];
+        mediaRecorder.ondataavailable = (e) => {
+            if (e.data.size > 0) recordedChunks.push(e.data);
+        };
+        mediaRecorder.start();
+        isRecording = true;
+        recordBtn.innerText = "إيقاف التسجيل";
+    } catch (err) {
+        console.log("التسجيل غير مدعوم:", err);
     }
 }
 
@@ -59,27 +60,95 @@ function stopRecording() {
     if (mediaRecorder && isRecording) {
         mediaRecorder.stop();
         isRecording = false;
+        recordBtn.innerText = "تسجيل فيديو";
     }
 }
 
-function downloadRecording() {
+recordBtn.addEventListener('click', () => {
+    if (!isRecording) {
+        startRecording();
+    } else {
+        stopRecording();
+    }
+});
+
+downloadBtn.addEventListener('click', () => {
     const blob = new Blob(recordedChunks, { type: 'video/webm' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'space-maestro-gameplay.webm';
+    a.download = 'space-maestro-game.webm';
     a.click();
-}
+});
 
-// MediaPipe FaceMesh Tracking
+// تتبع الوجه باستخدام MediaPipe FaceMesh
 function onResults(results) {
+    if (!gameStarted) return;
+
+    // مسح الشاشة في كل إطار
+    canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+    // رسم اللاعب
+    canvasCtx.fillStyle = player.color;
+    canvasCtx.beginPath();
+    canvasCtx.arc(player.x, player.y, player.size, 0, Math.PI * 2);
+    canvasCtx.fill();
+    canvasCtx.closePath();
+
+    // إذا تم اكتشاف الوجه، نستخدم إحداثياته لتحريك اللاعب يميناً ويساراً
     if (results.multiFaceLandmarks && results.multiFaceLandmarks.length > 0) {
         const landmarks = results.multiFaceLandmarks[0];
         const nose = landmarks[1];
-        player.targetX = (1 - nose.x) * canvasWidth;
+        
+        let targetX = (1 - nose.x) * canvasElement.width;
+        player.x += (targetX - player.x) * 0.2;
+    }
+
+    // تحديث ورسم الكويكبات
+    updateObstacles();
+    
+    // زيادة النقاط مع مرور الوقت
+    score++;
+    scoreElement.innerText = `النقاط: ${score}`;
+}
+
+// إنشاء وإدارة الكويكبات المعترضة
+function updateObstacles() {
+    if (Math.random() < 0.03) {
+        obstacles.push({
+            x: Math.random() * (canvasElement.width - 40),
+            y: -50,
+            width: 40,
+            height: 40,
+            speed: 5 + Math.floor(score / 200)
+        });
+    }
+
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+        let obs = obstacles[i];
+        obs.y += obs.speed;
+
+        canvasCtx.fillStyle = '#ff3366';
+        canvasCtx.fillRect(obs.x, obs.y, obs.width, obs.height);
+
+        let distX = Math.abs(player.x - (obs.x + obs.width / 2));
+        let distY = Math.abs(player.y - (obs.y + obs.height / 2));
+        if (distX < player.size + obs.width / 2 && distY < player.size + obs.height / 2) {
+            // انتهاء اللعبة
+            gameStarted = false;
+            if (isRecording) stopRecording();
+            finalScoreText.innerText = `مجموع نقاطك: ${score}`;
+            gameOverScreen.style.display = 'block';
+            recordBtn.style.display = 'none';
+        }
+
+        if (obs.y > canvasElement.height) {
+            obstacles.splice(i, 1);
+        }
     }
 }
 
+// إعداد تشغيل الكاميرا ونظام الذكاء الاصطناعي للوجه
 const faceMesh = new FaceMesh({
     locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`
 });
@@ -95,103 +164,32 @@ faceMesh.onResults(onResults);
 
 const camera = new Camera(videoElement, {
     onFrame: async () => {
-        await faceMesh.send({ image: videoElement });
+        if (gameStarted) {
+            await faceMesh.send({ image: videoElement });
+        }
     },
-    width: 640,
-    height: 480
+    width: 480,
+    height: 640
 });
-camera.start();
 
-function update() {
-    if (!gameStarted || isGameOver) return;
-
-    // Smooth movement interpolation
-    player.x += (player.targetX - player.x) * 0.18;
-    
-    if (player.x < player.radius) player.x = player.radius;
-    if (player.x > canvasWidth - player.radius) player.x = canvasWidth - player.radius;
-
-    obstacleTimer++;
-    if (obstacleTimer > 50) {
-        obstacles.push({
-            x: Math.random() * (canvasWidth - 50) + 25,
-            y: -50,
-            width: 40,
-            height: 40,
-            speed: 4.5 + Math.floor(score / 8)
-        });
-        obstacleTimer = 0;
-    }
-
-    for (let i = obstacles.length - 1; i >= 0; i--) {
-        obstacles[i].y += obstacles[i].speed;
-
-        let obs = obstacles[i];
-        let distX = Math.abs(player.x - obs.x - obs.width / 2);
-        let distY = Math.abs(player.y - obs.y - obs.height / 2);
-
-        if (distX < (obs.width / 2 + player.radius) && distY < (obs.height / 2 + player.radius)) {
-            triggerGameOver();
-        }
-
-        if (obstacles[i].y > canvasHeight) {
-            obstacles.splice(i, 1);
-            score += 1;
-            document.getElementById('score-val').innerText = score;
-        }
-    }
-}
-
-function draw() {
-    ctx.clearRect(0, 0, canvasWidth, canvasWidth);
-
-    // Background space grid effect
-    ctx.fillStyle = '#0b0f19';
-    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
-
-    // Draw Obstacles (Neon Red)
-    for (let obs of obstacles) {
-        ctx.fillStyle = '#ff3366';
-        ctx.shadowColor = '#ff3366';
-        ctx.shadowBlur = 12;
-        ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-        ctx.shadowBlur = 0;
-    }
-
-    // Draw Player (Neon Cyan spaceship/avatar with eyes)
-    ctx.fillStyle = '#00f2fe';
-    ctx.shadowColor = '#00f2fe';
-    ctx.shadowBlur = 18;
-    ctx.beginPath();
-    ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    // Player expressive eyes
-    ctx.fillStyle = '#0b0f19';
-    ctx.fillRect(player.x - 7, player.y - 5, 4, 5);
-    ctx.fillRect(player.x + 3, player.y - 5, 4, 5);
-}
-
-function mainLoop() {
-    update();
-    draw();
-    requestAnimationFrame(mainLoop);
-}
-
-function triggerGameOver() {
-    isGameOver = true;
-    if (isRecording) stopRecording();
-    document.getElementById('final-score').innerText = score;
-    document.getElementById('game-over-screen').style.display = 'block';
-}
-
-function restartGame() {
+// بدء اللعبة
+startBtn.addEventListener('click', () => {
+    startBtn.style.display = 'none';
+    recordBtn.style.display = 'inline-block';
+    gameOverScreen.style.display = 'none';
+    gameStarted = true;
     score = 0;
-    document.getElementById('score-val').innerText = score;
     obstacles = [];
-    isGameOver = false;
-    document.getElementById('game-over-screen').style.display = 'none';
-}
+    resizeCanvas();
+    camera.start();
+});
 
-requestAnimationFrame(mainLoop);
+// إعادة المحاولة
+restartBtn.addEventListener('click', () => {
+    gameOverScreen.style.display = 'none';
+    recordBtn.style.display = 'inline-block';
+    gameStarted = true;
+    score = 0;
+    obstacles = [];
+    resizeCanvas();
+});
