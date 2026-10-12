@@ -1,124 +1,95 @@
-* {
-    box-sizing: border-box;
-}
 body {
     margin: 0;
     padding: 0;
-    background: radial-gradient(circle at center, #111827 0%, #0b0f19 100%);
-    color: #ffffff;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #0b0b1a;
+    color: #fff;
+    font-family: Tahoma, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 400px;
+    height: 100vh;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    overflow: hidden;
+    position: relative;
+    background: #111;
 }
-.game-header {
-    margin-bottom: 8px;
+
+header {
     text-align: center;
+    padding: 10px;
+    z-index: 10;
 }
-.game-header h1 {
-    font-size: clamp(18px, 4vw, 24px);
-    color: #00f2fe;
+
+header h1 {
     margin: 0;
-    text-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+    font-size: 1.5rem;
+    color: #00ffcc;
 }
-#game-container {
+
+header p {
+    margin: 5px 0 0;
+    font-size: 0.85rem;
+    color: #aaa;
+}
+
+.view-port {
     position: relative;
     width: 100%;
-    max-width: 420px;
-    height: 75vh;
-    max-height: 700px;
-    background: #000000;
-    border-radius: 16px;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+    flex-grow: 1;
+    background: #000;
     overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid rgba(0, 242, 254, 0.2);
 }
-canvas {
-    display: block;
+
+#webcam {
+    position: absolute;
     width: 100%;
     height: 100%;
+    object-fit: cover;
+    transform: scaleX(-1); /* عكس الكاميرا لتكون مرآة طبيعية */
+    opacity: 0.4; /* جعل الكاميرا خافتة قليلاً لكي تظهر رسوميات اللعبة بوضوح فوقها */
 }
-.ui-overlay {
+
+#gameCanvas {
     position: absolute;
-    top: 15px;
-    left: 15px;
-    right: 15px;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 5;
+}
+
+.ui-layer {
+    width: 100%;
+    padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    box-sizing: border-box;
     z-index: 10;
-    pointer-events: none;
+    background: rgba(0, 0, 0, 0.7);
 }
-.score-box {
-    background: rgba(11, 15, 25, 0.75);
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    font-size: 16px;
+
+#score {
+    font-size: 1.2rem;
     font-weight: bold;
-    backdrop-filter: blur(5px);
 }
-.btn-action {
-    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-    color: #0b0f19;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 15px;
-    font-weight: bold;
-    font-size: 12px;
-    cursor: pointer;
-    box-shadow: 0 4px 10px rgba(0,242,254,0.3);
-    pointer-events: auto;
-    transition: transform 0.1s;
-}
-.btn-action:active {
-    transform: scale(0.95);
-}
-#game-over-screen {
-    display: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(11, 15, 25, 0.95);
-    padding: 25px;
-    border-radius: 16px;
-    text-align: center;
-    border: 2px solid #00f2fe;
-    z-index: 100;
-    width: 80%;
-    max-width: 280px;
-    backdrop-filter: blur(10px);
-}
-#game-over-screen h2 {
-    margin-top: 0;
-    color: #00f2fe;
-    font-size: 22px;
-}
-.btn-main {
-    background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-    color: #0b0f19;
+
+#startBtn {
+    background-color: #00ffcc;
+    color: #000;
     border: none;
     padding: 10px 20px;
-    border-radius: 25px;
+    font-size: 1rem;
     font-weight: bold;
-    font-size: 15px;
+    border-radius: 5px;
     cursor: pointer;
-    margin-top: 12px;
-    width: 100%;
-    box-shadow: 0 4px 15px rgba(0,242,254,0.4);
-}
-.btn-secondary {
-    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
-    color: #ffffff;
-    box-shadow: 0 4px 15px rgba(40,167,69,0.4);
-}
-#video-element {
-    display: none;
 }
